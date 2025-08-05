@@ -27,7 +27,6 @@ import { WorkspaceCacheStorageModule } from 'src/engine/workspace-cache-storage/
 import { WorkspaceManagerModule } from 'src/engine/workspace-manager/workspace-manager.module';
 
 import { workspaceAutoResolverOpts } from './workspace.auto-resolver-opts';
-import { AdminWorkspaceController } from './workspace.controller';
 import { Workspace } from './workspace.entity';
 
 import { WorkspaceService } from './services/workspace.service';
@@ -69,6 +68,5 @@ import { WorkspaceService } from './services/workspace.service';
     WorkspaceService,
     WorkspaceWorkspaceMemberListener,
   ],
-  controllers: [AdminWorkspaceController],
 })
 export class WorkspaceModule {}

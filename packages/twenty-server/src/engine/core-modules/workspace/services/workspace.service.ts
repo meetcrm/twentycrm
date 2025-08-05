@@ -399,11 +399,17 @@ export class WorkspaceService extends TypeOrmQueryService<Workspace> {
   /**
    * Найти Workspace по externalId или создать новый
    */
-  async findOrCreateByExternalId(externalId: string, data?: Partial<Workspace>): Promise<Workspace> {
+  async findOrCreateByExternalId(
+    externalId: string,
+    data?: Partial<Workspace>,
+  ): Promise<Workspace> {
     if (!externalId) {
       throw new BadRequestException('externalId is required');
     }
-    let workspace = await this.workspaceRepository.findOne({ where: { externalId } });
+    let workspace = await this.workspaceRepository.findOne({
+      where: { externalId },
+    });
+
     if (workspace) {
       return workspace;
     }
@@ -411,6 +417,7 @@ export class WorkspaceService extends TypeOrmQueryService<Workspace> {
       externalId,
       ...data,
     });
+
     return this.workspaceRepository.save(workspace);
   }
 

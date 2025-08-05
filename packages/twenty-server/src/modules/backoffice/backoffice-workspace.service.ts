@@ -1,9 +1,12 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Controller, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Workspace } from 'src/engine/core-modules/workspace/workspace.entity';
+
 import { Repository } from 'typeorm';
 
+import { Workspace } from 'src/engine/core-modules/workspace/workspace.entity';
+
 @Injectable()
+@Controller()
 export class BackofficeWorkspaceService {
   constructor(
     @InjectRepository(Workspace, 'core')
@@ -19,20 +22,33 @@ export class BackofficeWorkspaceService {
     const existing = await this.workspaceRepository.findOne({
       where: { externalId: data.externalId },
     });
+
     if (existing) {
-      throw new BadRequestException('Workspace with this externalId already exists');
+      throw new BadRequestException(
+        'Workspace with this externalId already exists',
+      );
     }
 
     const workspace = this.workspaceRepository.create(data);
+
     return this.workspaceRepository.save(workspace);
   }
 
-  async getAll(page: number = 1, limit: number = 20): Promise<{ items: Workspace[]; total: number; page: number; limit: number }> {
-  const [items, total] = await this.workspaceRepository.findAndCount({
-    skip: (page - 1) * limit,
-    take: limit,
-    order: { createdAt: 'DESC' },
-  });
-  return { items, total, page, limit };
-}
+  async getAll(
+    page = 1,
+    limit = 20,
+  ): Promise<{
+    items: Workspace[];
+    total: number;
+    page: number;
+    limit: number;
+  }> {
+    const [items, total] = await this.workspaceRepository.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+
+    return { items, total, page, limit };
+  }
 }
