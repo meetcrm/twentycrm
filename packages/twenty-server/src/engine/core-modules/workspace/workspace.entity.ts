@@ -182,6 +182,10 @@ export class Workspace {
   @Column({ default: false })
   isCustomDomainEnabled: boolean;
 
+  @Field(() => String, { nullable: true })
+  @Column({ type: 'varchar', unique: true, nullable: true })
+  externalId: string | null;
+
   // TODO: set as non nullable
   @Column({ nullable: true, type: 'uuid' })
   defaultRoleId: string | null;
