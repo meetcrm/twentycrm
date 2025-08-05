@@ -396,6 +396,24 @@ export class WorkspaceService extends TypeOrmQueryService<Workspace> {
     return !existingWorkspace;
   }
 
+  /**
+   * Найти Workspace по externalId или создать новый
+   */
+  async findOrCreateByExternalId(externalId: string, data?: Partial<Workspace>): Promise<Workspace> {
+    if (!externalId) {
+      throw new BadRequestException('externalId is required');
+    }
+    let workspace = await this.workspaceRepository.findOne({ where: { externalId } });
+    if (workspace) {
+      return workspace;
+    }
+    workspace = this.workspaceRepository.create({
+      externalId,
+      ...data,
+    });
+    return this.workspaceRepository.save(workspace);
+  }
+
   private async validateSecurityPermissions({
     payload,
     userWorkspaceId,
