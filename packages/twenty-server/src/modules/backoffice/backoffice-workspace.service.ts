@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 import { Workspace } from 'src/engine/core-modules/workspace/workspace.entity';
 
 @Injectable()
-@Controller()
 export class BackofficeWorkspaceService {
   constructor(
     @InjectRepository(Workspace, 'core')
