@@ -1,11 +1,11 @@
 DOCKER_NETWORK=twenty_network
 
 ensure-docker-network:
-	docker network inspect $(DOCKER_NETWORK) >/dev/null 2>&1 || docker network create $(DOCKER_NETWORK)
+	podman network inspect $(DOCKER_NETWORK) >/dev/null 2>&1 || podman network create $(DOCKER_NETWORK)
 
-postgres-on-docker:
+postgres-on-podman:
 	make ensure-docker-network
-	docker run -d --network $(DOCKER_NETWORK) \
+	podman run -d --network $(DOCKER_NETWORK) \
 	--name twenty_pg \
 	-e POSTGRES_USER=postgres \
 	-e POSTGRES_PASSWORD=postgres \
@@ -14,25 +14,25 @@ postgres-on-docker:
 	-p 5432:5432 \
 	postgres:16
 	@echo "Waiting for PostgreSQL to be ready..."
-	@until docker exec twenty_pg psql -U postgres -d postgres \
+	@until podman exec twenty_pg psql -U postgres -d postgres \
 		-c 'SELECT pg_is_in_recovery();' 2>/dev/null | grep -q 'f'; do \
 		sleep 1; \
 	done
-	docker exec twenty_pg psql -U postgres -d postgres \
+	podman exec twenty_pg psql -U postgres -d postgres \
 		-c "CREATE DATABASE \"default\" WITH OWNER postgres;" \
 		-c "CREATE DATABASE \"test\" WITH OWNER postgres;"
 
-redis-on-docker:
+redis-on-podman:
 	make ensure-docker-network
-	docker run -d --network $(DOCKER_NETWORK) --name twenty_redis -p 6379:6379 redis/redis-stack-server:latest
+	podman run -d --network $(DOCKER_NETWORK) --name twenty_redis -p 6379:6379 redis/redis-stack-server:latest
 
-clickhouse-on-docker:
+clickhouse-on-podman:
 	make ensure-docker-network
-	docker run -d --network $(DOCKER_NETWORK) --name twenty_clickhouse -p 8123:8123 -p 9000:9000 -e CLICKHOUSE_PASSWORD=devPassword clickhouse/clickhouse-server:latest \
+	podman run -d --network $(DOCKER_NETWORK) --name twenty_clickhouse -p 8123:8123 -p 9000:9000 -e CLICKHOUSE_PASSWORD=devPassword clickhouse/clickhouse-server:latest
 
-grafana-on-docker:
+grafana-on-podman:
 	make ensure-docker-network
-	docker run -d --network $(DOCKER_NETWORK) \
+	podman run -d --network $(DOCKER_NETWORK) \
 	--name twenty_grafana \
 	-p 4000:3000 \
 	-e GF_SECURITY_ADMIN_USER=admin \
@@ -41,9 +41,9 @@ grafana-on-docker:
 	-v $(PWD)/packages/twenty-docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources \
 	grafana/grafana-oss:latest
 
-opentelemetry-collector-on-docker:
+opentelemetry-collector-on-podman:
 	make ensure-docker-network
-	docker run -d --network $(DOCKER_NETWORK) \
+	podman run -d --network $(DOCKER_NETWORK) \
 	--name twenty_otlp_collector \
 	-p 4317:4317 \
 	-p 4318:4318 \
