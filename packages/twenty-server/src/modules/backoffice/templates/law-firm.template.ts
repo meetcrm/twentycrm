@@ -16,7 +16,7 @@ export const lawFirmTemplate: TemplateObject[] = [
       labelSingular: 'Клиент',
       labelPlural: 'Клиенты',
       description: 'Клиенты юридической компании',
-      icon: '🧑‍💼',
+      icon: 'IconUsers',
       shortcut: 'C',
     },
     fields: [
@@ -34,14 +34,14 @@ export const lawFirmTemplate: TemplateObject[] = [
       labelSingular: 'Дело',
       labelPlural: 'Дела',
       description: 'Юридические дела и проекты',
-      icon: '📁',
+      icon: 'IconBriefcase2',
       shortcut: 'S',
     },
     fields: [
       { name: 'client', label: 'Клиент', type: FieldMetadataType.RELATION, relationCreationPayload: { 
         targetObjectMetadataId: 'client',
         targetFieldLabel: 'Клиент',
-        targetFieldIcon: '🧑‍💼',
+        targetFieldIcon: 'IconUser',
         type: RelationType.MANY_TO_ONE,
       } },
       { name: 'title', label: 'Название дела', type: FieldMetadataType.TEXT },
@@ -53,13 +53,13 @@ export const lawFirmTemplate: TemplateObject[] = [
       { name: 'court', label: 'Суд', type: FieldMetadataType.RELATION, relationCreationPayload: { 
         targetObjectMetadataId: 'court',
         targetFieldLabel: 'Суд',
-        targetFieldIcon: '🧑‍💼',
+        targetFieldIcon: 'IconUser',
         type: RelationType.MANY_TO_ONE,
       } },
       { name: 'lawyer', label: 'Ответственный юрист', type: FieldMetadataType.RELATION, relationCreationPayload: { 
         targetObjectMetadataId: 'lawyer',
         targetFieldLabel: 'Ответственный юрист',
-        targetFieldIcon: '🧑‍💼',
+        targetFieldIcon: 'IconUser',
         type: RelationType.MANY_TO_ONE,
        } },
       { name: 'startDate', label: 'Дата начала', type: FieldMetadataType.DATE },
@@ -74,7 +74,7 @@ export const lawFirmTemplate: TemplateObject[] = [
       labelSingular: 'Суд',
       labelPlural: 'Суды',
       description: 'Суды, в которых ведутся дела',
-      icon: '⚖️',
+      icon: 'IconScale',
       shortcut: 'T',
     },
     fields: [
@@ -90,14 +90,14 @@ export const lawFirmTemplate: TemplateObject[] = [
       labelSingular: 'Документ',
       labelPlural: 'Документы',
       description: 'Документы по делам и клиентам',
-      icon: '📄',
+      icon: 'IconFileCertificate',
       shortcut: 'D',
     },
     fields: [
       { name: 'case', label: 'Дело', type: FieldMetadataType.RELATION, relationCreationPayload: { 
         targetObjectMetadataId: 'case', 
         targetFieldLabel: 'Дело',
-        targetFieldIcon: '📁',
+        targetFieldIcon: 'IconFolder',
         type: RelationType.MANY_TO_ONE,
       } },
       { name: 'title', label: 'Название документа', type: FieldMetadataType.TEXT },
@@ -113,7 +113,7 @@ export const lawFirmTemplate: TemplateObject[] = [
       labelSingular: 'Юрист',
       labelPlural: 'Юристы',
       description: 'Сотрудники-юристы компании',
-      icon: '👨‍⚖️',
+      icon: 'IconGavel',
       shortcut: 'L',
     },
     fields: [

@@ -16,7 +16,7 @@ export const beautySalonTemplate: TemplateObject[] = [
       labelSingular: 'Клиент',
       labelPlural: 'Клиенты',
       description: 'Посетители салона красоты',
-      icon: '🧑‍🦰',
+      icon: 'IconUser',
       shortcut: 'C',
     },
     fields: [
@@ -34,7 +34,7 @@ export const beautySalonTemplate: TemplateObject[] = [
       labelSingular: 'Запись',
       labelPlural: 'Записи',
       description: 'Записи клиентов на услуги',
-      icon: '📅',
+      icon: 'IconCalendar',
       shortcut: 'A',
     },
     fields: [
@@ -58,7 +58,7 @@ export const beautySalonTemplate: TemplateObject[] = [
       labelSingular: 'Услуга',
       labelPlural: 'Услуги',
       description: 'Услуги, предоставляемые салоном',
-      icon: '💇‍♀️',
+      icon: 'IconScissors',
       shortcut: 'S',
     },
     fields: [
@@ -75,7 +75,7 @@ export const beautySalonTemplate: TemplateObject[] = [
       labelSingular: 'Сотрудник',
       labelPlural: 'Сотрудники',
       description: 'Мастера и персонал салона',
-      icon: '💁‍♀️',
+      icon: 'IconUserStar',
       shortcut: 'E',
     },
     fields: [
@@ -94,7 +94,7 @@ export const beautySalonTemplate: TemplateObject[] = [
       labelSingular: 'Товар',
       labelPlural: 'Товары',
       description: 'Косметика и расходные материалы',
-      icon: '🧴',
+      icon: 'IconBottle',
       shortcut: 'P',
     },
     fields: [
