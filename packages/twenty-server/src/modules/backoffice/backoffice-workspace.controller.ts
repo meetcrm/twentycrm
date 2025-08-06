@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 
 import { Workspace } from 'src/engine/core-modules/workspace/workspace.entity';
 
+import { User } from '@microsoft/microsoft-graph-types';
 import { BackofficeApiKeyGuard } from './backoffice-api-key.guard';
 import { BackofficeWorkspaceService } from './backoffice-workspace.service';
 
@@ -12,11 +13,13 @@ export class BackofficeWorkspaceController {
 
   @Post('create-by-external-id')
   async createByExternalId(
-    @Body() body: { externalId: string; data?: Partial<Workspace> },
-  ): Promise<Workspace> {
+    @Body() body: { externalId: string; email: string; locale?: string },
+  ): Promise<{workspace: Workspace, user: User}> {
+    
     return this.workspaceService.create({
       externalId: body.externalId,
-      ...body.data,
+      email: body.email,
+      locale: body.locale,
     });
   }
 

@@ -349,6 +349,9 @@ export class SignInUpService {
 
   async signUpOnNewWorkspace(
     userData: ExistingUserOrPartialUserWithPicture['userData'],
+    workspaceParams?: {
+      externalId?: string;
+    },
   ) {
     const email =
       userData.type === 'newUserWithPicture'
@@ -391,6 +394,7 @@ export class SignInUpService {
       displayName: '',
       inviteHash: v4(),
       activationStatus: WorkspaceActivationStatus.PENDING_CREATION,
+      externalId: workspaceParams?.externalId,
       logo,
     });
 

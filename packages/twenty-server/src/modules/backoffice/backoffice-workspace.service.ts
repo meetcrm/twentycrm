@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Repository } from 'typeorm';
 
+import { SignInUpService } from 'src/engine/core-modules/auth/services/sign-in-up.service';
+import { ExistingUserOrPartialUserWithPicture } from 'src/engine/core-modules/auth/types/signInUp.type';
+import { User } from 'src/engine/core-modules/user/user.entity';
 import { Workspace } from 'src/engine/core-modules/workspace/workspace.entity';
 
 @Injectable()
@@ -10,27 +13,37 @@ export class BackofficeWorkspaceService {
   constructor(
     @InjectRepository(Workspace, 'core')
     private readonly workspaceRepository: Repository<Workspace>,
+    private readonly signInUpService: SignInUpService,
   ) {}
 
-  async create(data: Partial<Workspace>): Promise<Workspace> {
+  /**
+   * Создаёт workspace с externalId и первого пользователя через production flow.
+   */
+  async create(data: {
+    email: string;
+    externalId: string;
+    locale?: string;
+  }): Promise<{ user: User; workspace: Workspace }> {
+    if (!data.email) {
+      throw new BadRequestException('email is required');
+    }
     if (!data.externalId) {
       throw new BadRequestException('externalId is required');
     }
 
-    // Проверка уникальности externalId
-    const existing = await this.workspaceRepository.findOne({
-      where: { externalId: data.externalId },
-    });
-
-    if (existing) {
-      throw new BadRequestException(
-        'Workspace with this externalId already exists',
-      );
+    // Production flow: создаём workspace и пользователя
+    const userData: ExistingUserOrPartialUserWithPicture['userData'] = {
+      type: 'newUserWithPicture',
+      newUserWithPicture: {
+        email: data.email,
+        locale: data.locale || 'ru',
+      },
+    };
+    const workspaceParams = {
+      externalId: data.externalId,
     }
-
-    const workspace = this.workspaceRepository.create(data);
-
-    return this.workspaceRepository.save(workspace);
+    const { user, workspace } = await this.signInUpService.signUpOnNewWorkspace(userData, workspaceParams);
+    return { user, workspace };
   }
 
   async getAll(
