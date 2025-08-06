@@ -7,6 +7,9 @@ import { SignInUpService } from 'src/engine/core-modules/auth/services/sign-in-u
 import { ExistingUserOrPartialUserWithPicture } from 'src/engine/core-modules/auth/types/signInUp.type';
 import { User } from 'src/engine/core-modules/user/user.entity';
 import { Workspace } from 'src/engine/core-modules/workspace/workspace.entity';
+import { ObjectMetadataService } from 'src/engine/metadata-modules/object-metadata/object-metadata.service';
+import { beautySalonTemplate } from 'src/modules/backoffice/templates/beauty-salon.template';
+import { lawFirmTemplate } from 'src/modules/backoffice/templates/law-firm.template';
 
 @Injectable()
 export class BackofficeWorkspaceService {
@@ -14,6 +17,7 @@ export class BackofficeWorkspaceService {
     @InjectRepository(Workspace, 'core')
     private readonly workspaceRepository: Repository<Workspace>,
     private readonly signInUpService: SignInUpService,
+    private readonly objectMetadataService: ObjectMetadataService,
   ) {}
 
   /**
@@ -62,5 +66,25 @@ export class BackofficeWorkspaceService {
     });
 
     return { items, total, page, limit };
+  }
+
+  async applyTemplate(workspaceId: string, template: string) {
+    let objects;
+    if (template === 'beauty_salon') {
+      objects = beautySalonTemplate;
+    } else if (template === 'law_firm') {
+      objects = lawFirmTemplate;
+    } else {
+      throw new BadRequestException('Unknown template');
+    }
+
+    for (const obj of objects) {
+      await this.objectMetadataService.createOne({
+        ...obj,
+        workspaceId,
+        dataSourceId: 'default', // или актуальный id
+      });
+    }
+    return { success: true };
   }
 }

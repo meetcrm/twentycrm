@@ -9,7 +9,9 @@ import { BackofficeWorkspaceService } from './backoffice-workspace.service';
 @UseGuards(BackofficeApiKeyGuard)
 @Controller('rest-backoffice/workspace')
 export class BackofficeWorkspaceController {
-  constructor(private readonly workspaceService: BackofficeWorkspaceService) {}
+  constructor(
+    private readonly workspaceService: BackofficeWorkspaceService
+  ) {}
 
   @Post('create-by-external-id')
   async createByExternalId(
@@ -34,5 +36,12 @@ export class BackofficeWorkspaceController {
     limit: number;
   }> {
     return this.workspaceService.getAll(page, limit);
+  }
+
+  @Post('apply-template')
+  async applyTemplate(
+    @Body() body: { workspaceId: string; template: "beauty_salon" | "law_firm" }
+  ): Promise<{ success: boolean }> {
+    return this.workspaceService.applyTemplate(body.workspaceId, body.template);
   }
 }
