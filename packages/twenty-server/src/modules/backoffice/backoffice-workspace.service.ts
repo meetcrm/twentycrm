@@ -82,12 +82,12 @@ export class BackofficeWorkspaceService {
 
     for (const obj of objects) {
       // 1. Создаём объект
-      const objectMetadata = await this.objectMetadataService.createOne({
+      try {
+        const objectMetadata = await this.objectMetadataService.createOne({
         ...obj.object,
         workspaceId,
         dataSourceId: 'default', // или актуальный id
       });
-
       // 2. Для каждого поля — проверяем и создаём
       for (const field of obj.fields) {
         const existing = await this.fieldMetadataService.findOneWithinWorkspace(workspaceId, {
@@ -106,6 +106,12 @@ export class BackofficeWorkspaceService {
          
         });
       }
+      } catch (error) {
+        console.log(error);
+      }
+      
+
+      
     }
     return { success: true };
   }
