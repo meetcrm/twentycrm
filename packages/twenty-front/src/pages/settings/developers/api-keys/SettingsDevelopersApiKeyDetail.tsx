@@ -14,7 +14,7 @@ import { computeNewExpirationDate } from '@/settings/developers/utils/computeNew
 import { formatExpiration } from '@/settings/developers/utils/formatExpiration';
 import { SettingsPath } from '@/types/SettingsPath';
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
-import { TextInput } from '@/ui/input/components/TextInput';
+import { SettingsTextInput } from '@/ui/input/components/SettingsTextInput';
 import { ConfirmationModal } from '@/ui/layout/modal/components/ConfirmationModal';
 import { useModal } from '@/ui/layout/modal/hooks/useModal';
 import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBarContainer';
@@ -90,7 +90,7 @@ export const SettingsDevelopersApiKeyDetail = () => {
     onCompleted: (data) => {
       if (isDefined(data?.apiKey)) {
         setApiKeyName(data.apiKey.name);
-        if (isDefined(data.apiKey.role?.id)) {
+        if (isDefined(data.apiKey.role)) {
           setSelectedRoleId(data.apiKey.role.id);
         }
       }
@@ -156,11 +156,18 @@ export const SettingsDevelopersApiKeyDetail = () => {
     name: string,
     newExpiresAt: string | null,
   ) => {
-    if (!selectedRoleId) {
+    const adminRole = roles.find((role) => role.label === 'Admin');
+    const roleIdToUse = isApiKeyRolesEnabled ? selectedRoleId : adminRole?.id;
+
+    if (!roleIdToUse && isApiKeyRolesEnabled) {
       enqueueErrorSnackBar({
         message: t`A role must be selected for the API key`,
       });
       return;
+    }
+
+    if (!isDefined(roleIdToUse)) {
+      throw new Error('Admin role not found - this should never happen');
     }
 
     const { data: newApiKeyData } = await createApiKey({
@@ -168,7 +175,7 @@ export const SettingsDevelopersApiKeyDetail = () => {
         input: {
           name: name,
           expiresAt: newExpiresAt ?? '',
-          roleId: selectedRoleId,
+          roleId: roleIdToUse,
         },
       },
     });
@@ -238,7 +245,7 @@ export const SettingsDevelopersApiKeyDetail = () => {
               children: t`APIs`,
               href: getSettingsPath(SettingsPath.APIs),
             },
-            { children: t`${apiKeyName}` },
+            { children: apiKey?.name },
           ]}
         >
           <SettingsPageContainer>
@@ -297,7 +304,7 @@ export const SettingsDevelopersApiKeyDetail = () => {
                 title={t`Expiration`}
                 description={t`When the key will be disabled`}
               />
-              <TextInput
+              <SettingsTextInput
                 instanceId={`api-key-expiration-${apiKey?.id}`}
                 placeholder={t`E.g. backoffice integration`}
                 value={formatExpiration(apiKey?.expiresAt || '', true, false)}

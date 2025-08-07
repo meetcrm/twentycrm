@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { AddNextStepIdsToWorkflowRunsTrigger } from 'src/database/commands/upgrade-version-command/1-3/1-3-add-next-step-ids-to-workflow-runs-trigger.command';
 import { AssignRolesToExistingApiKeysCommand } from 'src/database/commands/upgrade-version-command/1-3/1-3-assign-roles-to-existing-api-keys.command';
+import { UpdateTimestampColumnTypeInWorkspaceSchemaCommand } from 'src/database/commands/upgrade-version-command/1-3/1-3-update-timestamp-column-type-in-workspace-schema.command';
 import { ApiKey } from 'src/engine/core-modules/api-key/api-key.entity';
 import { ApiKeyModule } from 'src/engine/core-modules/api-key/api-key.module';
 import { FeatureFlagModule } from 'src/engine/core-modules/feature-flag/feature-flag.module';
@@ -14,6 +16,7 @@ import { RoleModule } from 'src/engine/metadata-modules/role/role.module';
 import { WorkspaceFeatureFlagsMapCacheModule } from 'src/engine/metadata-modules/workspace-feature-flags-map-cache/workspace-feature-flags-map-cache.module';
 import { WorkspacePermissionsCacheModule } from 'src/engine/metadata-modules/workspace-permissions-cache/workspace-permissions-cache.module';
 import { TwentyORMModule } from 'src/engine/twenty-orm/twenty-orm.module';
+import { WorkspaceDataSourceModule } from 'src/engine/workspace-datasource/workspace-datasource.module';
 
 @Module({
   imports: [
@@ -28,6 +31,7 @@ import { TwentyORMModule } from 'src/engine/twenty-orm/twenty-orm.module';
       ],
       'core',
     ),
+    WorkspaceDataSourceModule,
     ApiKeyModule,
     FeatureFlagModule,
     TwentyORMModule,
@@ -35,7 +39,15 @@ import { TwentyORMModule } from 'src/engine/twenty-orm/twenty-orm.module';
     WorkspacePermissionsCacheModule,
     WorkspaceFeatureFlagsMapCacheModule,
   ],
-  providers: [AssignRolesToExistingApiKeysCommand],
-  exports: [AssignRolesToExistingApiKeysCommand],
+  providers: [
+    AssignRolesToExistingApiKeysCommand,
+    AddNextStepIdsToWorkflowRunsTrigger,
+    UpdateTimestampColumnTypeInWorkspaceSchemaCommand,
+  ],
+  exports: [
+    AssignRolesToExistingApiKeysCommand,
+    AddNextStepIdsToWorkflowRunsTrigger,
+    UpdateTimestampColumnTypeInWorkspaceSchemaCommand,
+  ],
 })
 export class V1_3_UpgradeVersionCommandModule {}

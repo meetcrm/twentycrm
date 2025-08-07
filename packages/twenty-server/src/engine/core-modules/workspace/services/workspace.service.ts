@@ -454,6 +454,10 @@ export class WorkspaceService extends TypeOrmQueryService<Workspace> {
         throw new PermissionsException(
           PermissionsExceptionMessage.PERMISSION_DENIED,
           PermissionsExceptionCode.PERMISSION_DENIED,
+          {
+            userFriendlyMessage:
+              'You do not have permission to manage security settings. Please contact your workspace administrator.',
+          },
         );
       }
     }
@@ -500,6 +504,10 @@ export class WorkspaceService extends TypeOrmQueryService<Workspace> {
         throw new PermissionsException(
           PermissionsExceptionMessage.PERMISSION_DENIED,
           PermissionsExceptionCode.PERMISSION_DENIED,
+          {
+            userFriendlyMessage:
+              'You do not have permission to manage workspace settings. Please contact your workspace administrator.',
+          },
         );
       }
     }
