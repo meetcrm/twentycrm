@@ -3,17 +3,30 @@ import { RelationType } from 'src/engine/metadata-modules/field-metadata/interfa
 import { CreateObjectInput } from 'src/engine/metadata-modules/object-metadata/dtos/create-object.input';
 import { FieldMetadataType } from 'twenty-shared/types';
 
-type TemplateField = Omit<
-  CreateFieldInput,
-  'objectMetadataId' | 'workspaceId' | 'dataSourceId'
-> & { relationTargetNameSingular?: string };
-
 export interface TemplateObject {
   object: Omit<CreateObjectInput, 'dataSourceId' | 'workspaceId'>;
-  fields: TemplateField[];
+  fields: Array<Omit<CreateFieldInput, 'objectMetadataId' | 'workspaceId' | 'dataSourceId'>>;
 }
 
 export const lawFirmTemplate: TemplateObject[] = [
+  {
+    object: {
+      nameSingular: 'client',
+      namePlural: 'clients',
+      labelSingular: 'Клиент',
+      labelPlural: 'Клиенты',
+      description: 'Клиенты юридической компании',
+      icon: 'IconUsers',
+      shortcut: 'C',
+    },
+    fields: [
+      { name: 'name', label: 'Имя', type: FieldMetadataType.TEXT },
+      { name: 'phone', label: 'Телефон', type: FieldMetadataType.PHONES },
+      { name: 'email', label: 'Email', type: FieldMetadataType.EMAILS },
+      { name: 'company', label: 'Компания', type: FieldMetadataType.TEXT },
+      { name: 'notes', label: 'Заметки', type: FieldMetadataType.RICH_TEXT },
+    ],
+  },
   {
     object: {
       nameSingular: 'case',
@@ -25,8 +38,8 @@ export const lawFirmTemplate: TemplateObject[] = [
       shortcut: 'S',
     },
     fields: [
-      { name: 'client', label: 'Клиент', type: FieldMetadataType.RELATION, relationTargetNameSingular: 'person', relationCreationPayload: { 
-        targetObjectMetadataId: '',
+      { name: 'client', label: 'Клиент', type: FieldMetadataType.RELATION, relationCreationPayload: { 
+        targetObjectMetadataId: 'client',
         targetFieldLabel: 'Клиент',
         targetFieldIcon: 'IconUser',
         type: RelationType.MANY_TO_ONE,
@@ -37,14 +50,14 @@ export const lawFirmTemplate: TemplateObject[] = [
         { value: 'closed', label: 'Закрыто', color: 'green', position: 2 },
         { value: 'archived', label: 'Архив', color: 'gray', position: 3 },
       ] },
-      { name: 'court', label: 'Суд', type: FieldMetadataType.RELATION, relationTargetNameSingular: 'court', relationCreationPayload: { 
-        targetObjectMetadataId: '',
+      { name: 'court', label: 'Суд', type: FieldMetadataType.RELATION, relationCreationPayload: { 
+        targetObjectMetadataId: 'court',
         targetFieldLabel: 'Суд',
         targetFieldIcon: 'IconUser',
         type: RelationType.MANY_TO_ONE,
       } },
-      { name: 'lawyer', label: 'Ответственный юрист', type: FieldMetadataType.RELATION, relationTargetNameSingular: 'person', relationCreationPayload: { 
-        targetObjectMetadataId: '',
+      { name: 'lawyer', label: 'Ответственный юрист', type: FieldMetadataType.RELATION, relationCreationPayload: { 
+        targetObjectMetadataId: 'lawyer',
         targetFieldLabel: 'Ответственный юрист',
         targetFieldIcon: 'IconUser',
         type: RelationType.MANY_TO_ONE,
@@ -81,8 +94,8 @@ export const lawFirmTemplate: TemplateObject[] = [
       shortcut: 'D',
     },
     fields: [
-      { name: 'case', label: 'Дело', type: FieldMetadataType.RELATION, relationTargetNameSingular: 'case', relationCreationPayload: { 
-        targetObjectMetadataId: '', 
+      { name: 'case', label: 'Дело', type: FieldMetadataType.RELATION, relationCreationPayload: { 
+        targetObjectMetadataId: 'case', 
         targetFieldLabel: 'Дело',
         targetFieldIcon: 'IconFolder',
         type: RelationType.MANY_TO_ONE,
@@ -91,6 +104,23 @@ export const lawFirmTemplate: TemplateObject[] = [
       { name: 'file', label: 'Файл', type: FieldMetadataType.RAW_JSON },
       { name: 'date', label: 'Дата', type: FieldMetadataType.DATE },
       { name: 'notes', label: 'Заметки', type: FieldMetadataType.RICH_TEXT },
+    ],
+  },
+  {
+    object: {
+      nameSingular: 'lawyer',
+      namePlural: 'lawyers',
+      labelSingular: 'Юрист',
+      labelPlural: 'Юристы',
+      description: 'Сотрудники-юристы компании',
+      icon: 'IconGavel',
+      shortcut: 'L',
+    },
+    fields: [
+      { name: 'name', label: 'Имя', type: FieldMetadataType.TEXT },
+      { name: 'phone', label: 'Телефон', type: FieldMetadataType.PHONES },
+      { name: 'email', label: 'Email', type: FieldMetadataType.EMAILS },
+      { name: 'specialization', label: 'Специализация', type: FieldMetadataType.TEXT },
     ],
   },
 ];
